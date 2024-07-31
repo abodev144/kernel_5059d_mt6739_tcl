@@ -27,6 +27,16 @@ jobs:
       with:
         python-version: 3.x
 
+    - name: List files for debugging
+      run: |
+        echo "Listing files in kernel-4.4/tools/dct:"
+        ls -l kernel-4.4/tools/dct
+
+    - name: Fix Python Script Compatibility
+      run: |
+        # Update the Python script for Python 3 compatibility
+        sed -i 's/print \([^)]*\)/print(\1)/g' kernel-4.4/tools/dct/drvgen.py
+
     - name: Set up ccache
       uses: hendrikmuhs/ccache-action@v1.2
 
@@ -34,11 +44,6 @@ jobs:
       id: get_time
       run: |
         echo "TIME=$(TZ=UTC-8 date +%m%d%H%M)" >> $GITHUB_ENV
-
-    - name: Fix Python Script Compatibility
-      run: |
-        # Example: Update the Python script for Python 3 compatibility
-        sed -i 's/print \([^)]*\)/print(\1)/g' ../scripts/drvgen/drvgen.py
 
     - name: Build Kernel
       run: |
